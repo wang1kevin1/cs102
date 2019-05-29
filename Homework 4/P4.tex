@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\setlength{\parindent}{2.5em}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 4}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+\begin{center}
+{\footnotesize \textbf{Collaborators:} \textit{None}} 
+\end{center}
+
+\section*{Solution to Problem 4: One Edge, One Unit}
+
+Given:
+\begin{itemize}
+\item a directed graph $G=(V,E)$ with $n$ nodes and $m$ edges
+\item a capacity $c_{e} \in \mathbb{Z}^{+}$ on each edge $e \in E$
+\item source $s \in V$ and sink $t \in V$
+\end{itemize}
+
+\noindent ... assume there is a maximum acyclic $s$--$t$ flow, $f$, in $G$. \\
+
+\noindent Let $H$ be a modified graph of $G$, where a specific edge $e' \in E$ is picked and its capacity $c_{e'}$ reduced by 1 unit. Find the max flow of $H$. \\
+
+\noindent \textbf{Observation:} If we decrease $c_{e'}$ by 1 unit, then the max flow of $H$ is either the same as $f$ or also decreased by 1 unit. \\
+
+\textbf{Case 1:} The flow of edge $e$ was smaller than the capacity of edge $e$: $f_{e} < c_{e}$. \\
+
+\indent \indent The max flow in $G$, $f$, is also the max flow in $H$ because $f_{e'} \leq c_{e'}$ when $c_{e'} = c_{e} - 1$. \\
+
+\textbf{Case 2:} The flow of edge $e$ was equal to the capacity of edge $e$: $f_{e} = c_{e}$. \\
+
+\indent \indent By reducing $c_{e'}$, the flow becomes invalid as $f_{e'} > c_{e'}$ when $c_{e'} = c_{e} - 1$. \\
+
+\noindent To fix the invalidity, we reduce $f_{e'}$ by 1 unit as well. Then find a simple $u$--$s$ path and a simple $t$--$v$ path and route 1 unit of flow along the path $t$--$v$--$u$--$s$ to balance the in-flow and out-flow of $e'$. The new flow  is 1 unit less than $f$ and is in $H$ as well.
+
+\noindent \textbf{Observation:} An augumenting path from $s$--$t$ has a flow of at most 1 unit. \\
+
+\noindent Finally, we check if there are any augmenting paths from $s$--$t$ using \textbf{Ford-Fulkerson}.\\
+
+\textbf{Case 1:} There is an augmenting path, $p$, with max flow $f_{p} = 1$ \\
+
+\indent \indent We can increase the flow of the edges by 1 unit, resulting in the same max-flow as $G$. \\
+
+\textbf{Case 2:} No augmenting path exists. \\
+
+\indent \indent The max flow of $H$ is less than $f$ by 1 unit. \\
+
+\pagebreak
+
+\begin{algorithm}
+\caption{Finds the max flow $f'$ of $H$}
+\begin{algorithmic} 
+\STATE \textbf{MAX-FLOW}:
+\IF{$f_{e} < c_{e}$}
+\STATE Return $f$
+\ELSE
+\STATE \textit{[If: $f_{e} = c_{e}$]}
+\STATE Initialize the residual network $H_{f'}$
+\STATE Search for augumenting path $p$ (Ford-Fulkerson)
+\IF{$p \neq $ null}
+\STATE Return $f'+f_{p}$
+\ELSE
+\STATE Return $f'$
+\ENDIF
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\noindent \textbf{Time Complexity: $O(m+n)$} \\
+\noindent Initializing the residual graph takes time $O(m+n)$. Ford Fulkerson runs in time $O(C \cdot (m+n))$ where $C$ is the capacity of the cut from the source node. Total run time is $O((C+1) \cdot (m+n))$. \\
+
+\noindent \textbf{Space Complexity: $O(m+n)$} \\
+\noindent Typical space complexity for a graph is $O(m+n)$. 
+
+\end{document}

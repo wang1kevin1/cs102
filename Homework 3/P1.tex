@@ -1,0 +1,100 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 3}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 1: Crop Profit}
+
+Let $A[1...n]$ be the array of crop prices in the past $n$ days where $n>2$. $A[i]$ is the crop price on day $i$.
+
+\begin{algorithm}
+\caption{Returns the maximum profit possible in the past $n$ days}
+\begin{algorithmic} 
+\STATE \textbf{MAX-PROFIT} ($A[\ ], n$):
+\STATE Initialize index of local minima, $min$
+\STATE Initialize index of local maxima, $max$
+\STATE Initialize maximum profit, $profit=0$
+\STATE Initialize array index, $i=0$
+\WHILE{$i < n-1$}
+\WHILE{$(i<n-1)$ and $(A[i+1] \leq A[i])$}
+\STATE $i++$
+\ENDWHILE
+\IF{$i == n-1$}
+\STATE Break
+\ENDIF
+\STATE $min=i$, $i++$
+\WHILE{$(i<n)$ and $(A[i] \geq A[i-1])$}
+\STATE $i++$
+\ENDWHILE
+\STATE $max=(i-1)$
+\STATE $profit += (A[max] - A[min])$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+This algorithm is optimal and finds the maximum profit.
+\end{claim}
+
+\begin{proof}
+Let $s_{i}-b_{i}$ be the profit made from a single sell-buy transaction. The profit of the transactions performed by the algorithm is $(s_{1}-b_{1})+(s_{2}-b_{2})+...$. \newline
+
+\noindent Assume for the sake of contradiction that $b_{1} << s_{2}$ and the transaction $b_{1}$ -- $s_{2}$ is more profitable: \newline
+\begin{align}
+(s_{2}-b_{1}) - [(s_{1}-b_{1})+(s_{2}-b_{2})] &= -(s_{1}-b_{2})\notag \\
+&< 0\notag \\
+\implies (s_{2}-b_{1}) &< (s_{1}-b_{1})+(s_{2}-b_{2})\notag
+\end{align}
+Thus, by contradiction, the algorithm does find the maximum profit.
+\end{proof}
+
+\noindent The algorithm goes through the length of $A[1...n]$ and each check incrememnts the index by 1. Thus the algorithm completes the check of all $n$ indices in time: $O(n)$.\newline
+
+\noindent The algorithm requires an array of size $n$ and stores 3 separate values. Thus the space complexity is: $O(n)$.
+\end{document}
+

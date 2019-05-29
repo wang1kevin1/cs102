@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 3}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 3: Furniture Transfer}
+
+Given a sequence of chairs with size $s_{1}, s_{2}, \dotsb , s_{n}$, let David's truck have size limit $S$, and each chair $i$ has size $s_{i}$. 
+
+\begin{observation}
+The packages are loaded in order for both the greedy algorithm and the delay method.
+\end{observation}
+
+\begin{observation}
+Optimality is determined by $D(a)$ where $D$ is the number of deliveries required using algorithm $a$.
+\end{observation}
+
+\begin{claim}
+The simple greedy algorithm, $g$, is in fact better than the delay algorithm, $d$: $D(g) \leq D(d)$ 
+\end{claim}
+
+\begin{proof}
+In algorithm $g$, if delivery $k$ can fit the first chair from delivery $k+1$, moving the chair $s_{i}$ from delivery $k+1$ to delivery $k$ doesn't use more deliveries. Furthermore, it is possible that fewer deliveries are needed if $s_{i}$ was the only chair in delivery $k+1$. If algorithm $d$ delays this chair for delivery $k+1$ and changes nothing else, then $D(g) \leq D(d)$.
+\end{proof}
+\end{document}
+

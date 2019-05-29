@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 3}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 2: Space-Efficient MST}
+
+Let connected graph $G=(V,E)$, where $|V|=n$ and $|E|=m$, have a weight function $w:E \rightarrow \mathbb{R}$. \newline
+Vertex $s$ is the source.
+
+\begin{algorithm}
+\caption{Finds the MWST using eager implementation of Prim's}
+\begin{algorithmic} 
+\STATE \textbf{EAGER-PRIMS} ($G,s$):
+\STATE Initialize array edgeTo[ ] // Stores the shortest edge from a MST vertex
+\STATE Initialize array distTo[ ] // Stores weight of edgeTo[ ]
+\STATE Initialize array onTree[ ] // Stores 'true' if vertex is on MST
+\STATE Initialize indexable priority queue Q
+\FOR{$i=1$ to $n$}
+\STATE distTo$[i]=\infty$
+\ENDFOR
+\STATE distTo$[0]=0.0$ 
+\STATE $Q = (s$, 0.0) // Initialize indexable queue with key: source weight: 0.0
+\WHILE{$|Q| \neq 0$}
+\STATE $x=$EXTRACT-MIN($Q$) // Get closest vertex
+\STATE onTree$[x]=$ true
+\FOR{each $y \in$ adj[$x$]}
+\IF{onTree$[y]$}
+\STATE Continue
+\ELSE
+\IF{distTo$\{y\}>$weight$(x$---$y)$}
+\STATE edgeTo$[y]$ = $x$---$y$
+\STATE distTo$[y]$ = weight$(x$---$y)$
+\STATE DECREASE-KEY($y$, distTo$[y]$)
+\ENDIF
+\ENDIF
+\ENDFOR
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\noindent The algorithm uses arrays and a priority queue indexed and keyed by vertex thus each array is at most size $n$. Thus the space complexity is $4 \times O(n)=O(n)$.
+\end{document}
+

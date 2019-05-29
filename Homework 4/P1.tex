@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\setlength{\parindent}{2.5em}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 4}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+\begin{center}
+{\footnotesize \textbf{Collaborators:} \textit{None}} 
+\end{center}
+
+\section*{Solution to Problem 1: Coffee Shops}
+
+Given $n$ minutes to study, Charlie has two sequences $V=\{ v_{1} , v_{2} , \cdots , v_{i} , \cdots , v_{n} \}$ and $R=\{ r_{1} , r_{2} , \cdots , r_{i} , \cdots , r_{n} \}$ which represents the work he can do at the $i$-th minute at Valve and Ruru, respectively. It costs Charlie 10 minutes to switch coffee shops. \\
+
+\noindent Let $W(n)$ be the maximum total work Charlie can do.
+
+\subsection*{Sub-Problems}
+
+\textbf{$\boldsymbol{W_{V}[i]}$ is the max total work done by time $\boldsymbol{i}$ when currently at Valve.} At time $i$ while at Valve, Charlie could have: (1) been studying there already or (2) just arrived from Ruru. \\
+
+\indent \textbf{Base Case:} Charlie has done no work before 9AM. $\longrightarrow W_{V}[i \leq 0]=0$ 
+
+
+\indent \textbf{Case 1:} Charlie has been studying there already.
+\begin{align}
+W_{V}[i] &= \text{max work done a minute ago} + \text{work done at the i-th minute at Valve} \notag \\
+&= W_{V}[i-1]+v_{i} \notag
+\end{align}
+
+\indent \textbf{Case 2:} Charlie just arrived from Ruru.
+\begin{align}
+W_{V}[i] &= \text{max work done when at Ruru} + \text{work done at the i-th minute at Valve} \notag \\
+&= W_{R}[i-10]+v_{i} \notag
+\end{align}
+
+
+\indent Therefore, the max total work done by time $i$ when currently at Valve is the max of cases 1 and 2.
+\begin{center}
+$\longrightarrow W_{V}[i]=$ max( $W_{V}[i-1]+v_{i}$ , $W_{R}[i-10]+v_{i}$ )
+\end{center}
+
+\noindent Similarly, \textbf{$\boldsymbol{W_{R}[i]}$ is the max total work done by time $\boldsymbol{i}$ when currently at Ruru.} \\
+
+\indent \textbf{Base Case:} Charlie has done no work before 9AM. $\longrightarrow W_{R}[i \leq 0] =0$ \\
+
+\indent \textbf{Case 1:} Charlie has been studying there already. $\longrightarrow W_{R}[i]=W_{R}[i-1]+r_{i}$ \\
+
+\indent \textbf{Case 2:} Charlie just arrived from Valve. $\longrightarrow W_{R}[i]=W_{V}[i-10]+r_{i}$
+
+\begin{center}
+$\longrightarrow W_{R}[i]=$ max( $W_{R}[i-1]+r_{i}$ , $W_{V}[i-10]+r_{i}$ )
+\end{center}
+
+\pagebreak
+
+\noindent Therefore, the maximum work Charlie can complete in $n$ minutes past 9AM is:
+\[
+\text{W}(n) =
+\begin{cases}
+0 & \text{if $n \leq 0$}\\
+\text{max($W_{V}[n]$,$W_{R}[n]$)}  & \text{otherwise}\\
+\end{cases}       
+\]
+
+\begin{algorithm}
+\caption{Finds the max work Charlie can do in $n$ minutes}
+\begin{algorithmic} 
+\STATE \textbf{MAX-WORK} ($n$):
+\STATE Let $W_{V}[i \leq 0]=0$ and $W_{R}[i \leq 0]=0$
+\FOR{$i=1$ to $n$}
+\STATE $W_{V}[i]=$ max( $W_{V}[i-1]+v_{i}$ , $W_{R}[i-10]+v_{i}$ )
+\STATE $W_{R}[i]=$ max( $W_{R}[i-1]+r_{i}$ , $W_{V}[i-10]+r_{i}$ )
+\ENDFOR
+\STATE W$(n)=$ max($W_{V}[n]$,$W_{R}[n]$)
+\STATE
+\STATE \textit{*** To find out when Charlie should move coffee shops, just flag when V $\leftrightarrow$ R. ***}
+\end{algorithmic}
+\end{algorithm}
+
+\noindent \textbf{Time Complexity: $O(n)$} \\
+\noindent The for-loops iterates over 2 comparisons, $n$ times, finishing with 1 last comparison. Total time used is $O(2n+1)$.\\
+
+\noindent \textbf{Space Complexity:} \\
+\noindent The 2 arrays $V$ and $R$ are each of size $n$. The 2 sequences, {$v_{1}, \cdots , v_{n}$} and {$r_{1}, \cdots , r_{n}$}, also each have size $n$. Total space used is $O(4n)$.
+
+\end{document}

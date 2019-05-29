@@ -1,0 +1,128 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 1}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 3: Tokens in the Bag}
+
+Given a bag of red, green, and/or blue tokens, we want to prove that performing the following algorithm will terminate:
+
+\begin{algorithm}
+\caption{Repeats until the bag of tokens is empty}
+\begin{algorithmic} 
+\WHILE{there are more than 2 tokens in the bag}
+\STATE Take 2 random tokens out of the bag
+\IF{one of the tokens is \textit{red}}
+\STATE Do nothing
+\ELSIF{both tokens are \textit{green}}
+\STATE Put 1 \textit{green} token and 2 \textit{blue} tokens back into the bag
+\ELSE[At least 1 \textit{blue} token and the other token is not \textit{red}]
+\STATE Put 3 \textit{red} tokens back into the bag
+\ENDIF
+\ENDWHILE { [Exactly 2 or fewer tokens in the bag]}
+\STATE Empty the bag
+\end{algorithmic}
+\end{algorithm}
+
+\noindent We assume that there is always enough tokens to put back into the bag.
+
+\begin{observation}
+A selection with a red token decreases the token count of the bag.
+\end{observation}
+
+\begin{lemma}
+A selection with a blue token results in a decrease of the bag's token count.
+\begin{proof}
+\begin{case}
+If the blue token is selected with a red one, by Observation 1, the token count of the bag is decreased. 
+\end{case}
+\begin{case}
+If the blue token is selected with a green or another blue token, they are replaced by 3 red tokens. By Observation 1, this subset of red tokens will result in a decrease of the bag's token count.
+\end{case}
+\end{proof}
+\end{lemma}
+
+\setcounter{case}{0}
+\begin{lemma}
+A selection with a green token results in a decrease of the bag's token count.
+\begin{proof}
+\begin{case}
+If the green token is selected with a red one, by Observation 1, the token count of the bag is decreased. 
+\end{case}
+\begin{case}
+If the green token is selected with a blue token, by Lemma 1, the selection results in a decrease of the bag's token count.
+\end{case}
+\begin{case}
+If the green token is selected with another green token, they are replaced by 1 green and 2 blue tokens. By Lemma 1, all possible combinations of 2 tokens selected from this subset result in a decrease of the bag's token count.
+\end{case}
+\end{proof}
+\end{lemma}
+
+\begin{lemma}
+All possible color combinations will lead to a decrease of a bag's total token count.
+\begin{proof}
+By Observation 1, Lemma 1, and Lemma 2, a selection with any color will lead to the eventual removal of the affected subset of tokens.
+\end{proof}
+\end{lemma}
+
+\setcounter{case}{0}
+\begin{claim}
+This process will always terminate.
+\end{claim}
+
+\begin{proof}
+Let $P(n)$ be the statement: "A bag of $n$ tokens will always terminate", where $n$ is the number of tokens in the bag and $n \in \mathbb{N}$. \newline
+
+\noindent It is stated that the bag is emptied -- and thus the program terminated -- when there are exactly 2 or fewer tokens left in the bag prior to a loop. Therefore, the base cases of $P(1)$ and $P(2)$ are true. \newline
+
+\noindent Assume for a bag of $n$ tokens, where $n > n_{0}$ and $n_{0} = 2$, that $P(n)$ is true. We need to prove that $P(n + 1)$ is true. \newline
+
+\noindent Let a bag of $n + 1$ tokens be equivalent to a bag of $n$ tokens plus a single token. Using the induction hypothesis, we assume that the process terminates on the subset of $n$ tokens. By Lemma 3, the additional token -- whether it be red, blue, or green, respectively -- will always result in a net decrease of tokens. We also know that 1 single token left-over will still result in termination. Thus $P(n) \implies P(n + 1)$ is true, proving that the process will always terminate.
+\end{proof}
+
+\end{document}

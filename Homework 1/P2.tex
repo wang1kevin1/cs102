@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 1}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 2: TA-Course Matching}
+
+Given $m$ courses and $n$ students, we want to assign each student to a TA position in at most one course, in such a way that all TA positions are filled and the matching is stable. \newline
+
+\noindent We assume that $n >$ $\sum_{i=1}^{m} p_{i}$, where $p_{i}$ is the number of positions in course$_{i}$.
+
+\begin{algorithm}
+\caption{Perform a stable matching to assign graduate students to TA positions.}
+\begin{algorithmic} 
+\STATE Initialize each student to be \textit {free}
+\STATE Initialize each course[\textit {position}] to be \textit {free}
+\WHILE{some student is \textit {free} and has not applied to every course}
+\STATE Choose such a student $s$
+\STATE $c =$ 1st course on $s$'s list to which $s$ has not applied
+\IF{$c$ has a position that is \textit {free}}
+\STATE Assign $s$ to a position in $c$
+\ELSIF{$c$ prefers $s$ to the least preferred tentative assignment $s'$}
+\STATE Assign $s$ to a position in $c$
+\STATE Assign $s'$ to be \textit {free}
+\ELSE[No positions in $c$ are \textit {free} and $s$ is not preferred more than an existing assignment]
+\STATE $c$ rejects $s$ as a TA
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\begin{observation}
+Students apply to courses in decreasing order of preference.
+\end{observation}
+
+\begin{observation}
+Once a TA position is filled, it never becomes unfilled; it only "trades up" for a more preferred student.
+\end{observation}
+
+\begin{observation}
+There will always be unassigned students.
+\end{observation}
+
+\begin{claim} 
+The algorithm terminates after at most $n \times m$ iterations of the while loop.
+\end{claim}
+
+\begin{proof} 
+Each time the algorithm iterates through the while loop, a student applies to a new course. There are only $n \times m$ possible applications.
+\end{proof}
+
+\begin{claim}
+All TA positions in all courses are filled.
+\end{claim}
+
+\begin{proof}
+Suppose, for the sake of contradiction, that a position in course $c$ is not filled upon termination of the algorithm. There is also, by Observation 3, some student $s$, who is not assigned upon termination. By Observation 2, $s$ did not apply to a position in $c$. However, $s$ has applied to every course, since he ends up unassigned -- resulting in a contradiction.
+\end{proof} \newpage
+
+\begin{claim}
+There are no unstable assignments.
+\end{claim}
+
+\begin{proof}
+Suppose, for the sake of contradiction, that $c - s'$ is an unstable assignment. 
+\begin{case}
+The instructor of $c$ favors an unassigned student $s'$ over a current assignment $s$.
+\end{case}
+
+\begin{proofofcase}
+Assume $s'$ never applied to $c$. By Observation 1, $s'$ prefers their current assignment to $c$. However, $s'$ is unassigned. Thus $c - s'$ is stable.
+\end{proofofcase}
+
+\begin{proofofcase}
+Assume $s'$ applied to $c$. This implies $s'$ was rejected by the instructor of $c$ immediately or later on. By Observation 2, the instructor of $c$ prefers their current assignment(s) to student $s'$. Thus $c - s'$ is stable.
+\end{proofofcase}
+
+\begin{case}
+The instructor of $c$ favors student $s'$ over a current assignment $s$ and the student $s'$ favors course $c$ over the current position in course $c'$.
+\end{case}
+
+\begin{proofofcase}
+Assume $s'$ never applied to $c$. By Observation 1, $s'$ prefers their current assignment $c'$ to $c$. Thus $c - s'$ is stable.
+\end{proofofcase}
+
+\begin{proofofcase}
+Assume $s'$ applied to $c$. This implies $s'$ was rejected by the instructor of $c$ immediately or later on. By Observation 2, the instructor of $c$ prefers their current assignment(s) to student $s'$. Thus $c - s'$ is stable.
+\end{proofofcase}
+
+\noindent In in all possible cases of instability, $c - s'$ is a stable assignment, a contradiction.
+\end{proof}
+
+\noindent The total run time of initializing all the students and all the course positions is at most $O(n + (n-1))$, respectively. Running the modified Gale-Shapley takes $O(n*m)$. The time complexity of this algorithm is: $O(n*m)$. \newline
+
+\noindent The total space needed for the array of student assignments and the 2-dimensional array of course position assignments is at most $O(n + (n - 1))$. The spaces needed for both the student preferences of courses and the course instructors rank of students are $O(m*n)$. A queue of unassigned students is at most $O(n)$. The space complexity of this algorithm is: $O(m*n)$.
+
+\end{document}

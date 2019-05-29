@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 2}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 2: Finding the Peak}
+
+Let $A[1:n]$ be an array of $\mathbb{Z}^{+}$, where $n \geq 3$. Array $A$ has special properties: $A[1] \leq A[2]$ and $A[n-1] \geq A[n]$. We define $A[x]$ as a \textit{peak} if $A[x] \geq A[x-1]$ and $A[x] \geq A[x+1]$.
+
+\begin{algorithm}
+\caption{Uses divide-and-conquer to locate a peak in an array}
+\begin{algorithmic} 
+\STATE \textbf{FIND-PEAK} ($A$ , $n$):
+\STATE Let $x = \frac{n}{2}$
+\IF{$A[x-1] \leq A[x] \leq A[x+1]$}
+\STATE $A[x]$ is a peak. Return index $x$.
+\ELSIF{$A[x-1] \geq A[x]$}
+\STATE FIND-PEAK ($A[0:x-1]$ , $x$)
+\ELSE 
+\STATE $\{ \text{When } A[x+1] \geq A[x] \}$
+\STATE FIND-PEAK ($A[x:n]$ , $x$)
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+The time complexity of the algorithm is $O(\log n)$.
+\end{claim}
+
+\begin{proof}
+It takes time $O(2)$ to check the neighbors of an array element. The time complexity of each reduced half array is $T\big( \frac{n}{2} \big)$.
+Therefore, the recurrence relation for the algorithm is defined as:
+\begin{center}
+$T(n) = T\big( \frac{n}{2} \big) + O(2)$
+\end{center}
+Thus, by Case 2 of the Master Theorem, the algorithm's time complexity is $O(\log n)$.
+\end{proof}
+
+\end{document}
+

@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 2}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 4: Ropes}
+
+Let $L = \{ l_{1} ... l_{n} \}$ where $l_{i} \in \mathbb{Z}^{+}$. The cost of joining two ropes, $i$ and $j$, is $C=l_{i}+l_{j}$. 
+
+\begin{algorithm}
+\caption{Joins a set of different length rope together with the minimum total cost}
+\begin{algorithmic} 
+\STATE \textbf{JOIN-ROPE} ($L$ , $C$):
+\IF{$|L|=1$}
+\STATE The rope has been fully joined. Return total cost $C$
+\ELSE [$|L|>1$]
+\STATE Let $l_{i}$ and $l_{j}$ be the shortest two ropes in set $L$
+\STATE Let $L'$ be the new set after the ropes have been joined
+\STATE $C' = C + l_{i} + l_{j}$
+\STATE JOIN-ROPE ($L'$ , $C'$)
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+This algorithm is optimal as it incurs the minimum total cost.
+\end{claim}
+
+\begin{proof}
+We observe that each set always takes exactly $n-1$ joins in order to become a single rope. Thus, because there is a set number of additions to the total cost and due to the max cost addition being the cumulative length of the set, the most optimal method of proceeding with the costs is to keep each cost addition as small as possible.  
+\end{proof}
+
+\end{document}
+

@@ -1,0 +1,97 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 2}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 3: Best Friend}
+
+Everyday $m$ friends each give you a buy/sell suggestion for the stock market. At the end of the day you receive a binary feedback: 0 for a wrong decision, 1 for a correct decision. In the $T$ days of trading, you want to optimize the number of mistakes while finding the one friend who is always correct. \newline
+
+\noindent Let $M$ be the set of all $m$ friends: 
+$M = \{ \text(friend)_{1}...\text(friend)_{m} \}$
+
+\begin{algorithm}
+\caption{Uses divide-and-conquer to locate the best friend}
+\begin{algorithmic} 
+\STATE \textbf{BEST-FRIEND} ($M$ , $T$):
+\STATE Let $M_{B} \subseteq M$ be the set of all friends suggesting \textit{BUY}
+\STATE Let $M_{S} \subseteq M$ be the set of all friends suggesting \textit{SELL}
+\IF{$|M|=1$}
+\STATE Return the best friend
+\ELSIF{$|M_{B}| \geq |M_{S}|$}
+\STATE \textit{BUY} stock
+\IF{feedback is 0}
+\STATE BEST-FRIEND ($M_{S}$ , $T-1$)
+\ELSE [feedback is 1]
+\STATE BEST-FRIEND ($M_{B}$ , $T-1$)
+\ENDIF
+\ELSE [$|M_{S}| > |M_{B}|$]
+\STATE \textit{SELL} stock
+\IF{feedback is 0}
+\STATE BEST-FRIEND ($M_{B}$ , $T-1$)
+\ELSE [feedback is 1]
+\STATE BEST-FRIEND ($M_{S}$ , $T-1$)
+\ENDIF
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+The strategy finds the best friend while obtaining at most $O(\log n)$ mistakes (feedback of 0).
+\end{claim}
+
+\begin{proof}
+A minimum of half the set of current friends $M$ must be incorrect for a feedback of 0 to be received (less than half, and another market decision would have been made). Each time an incorrect decision is made, the subset of friends to continue vetting is at most, half of the previous superset. Therefore:
+\begin{center}
+$T(m) \leq T \big( \frac{m}{2} \big)$
+\end{center}
+Thus, by Case 2 of the Master Theorem, the algorithm's receives at most $O(\log m)$ feedback of 0.
+\end{proof}
+
+\end{document}
+

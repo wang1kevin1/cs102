@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 3}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+
+\section*{Solution to Problem 4: Cakes}
+
+Given $N$ dollars to spend in a shop that offers $m$ varieties of cakes with distinct prices $S = \{ S_{1} , \cdots , S_{m} \}$, find the possible combinations of cakes given that all money must be spent and that there are unlimited cakes of each variety.
+
+\begin{algorithm}
+\caption{Returns the number of cake combinations possible}
+\begin{algorithmic} 
+\STATE \textbf{CAKE-COMBO} ($S[S_{1} , \cdots , S_{m}], m, N$):
+\STATE Initialize $Table[0,\cdots,N][1,\cdots,m]$ // modified indexes
+\FOR{$cost=0$ and $variety=1$ to $m$}
+\STATE $Table[cost][variety]=1$ 
+\ENDFOR
+\FOR{$cost=1$ to $N$}
+\FOR {$variety=1$ to $m$}
+\STATE Let $c_{i}$ be the count of combinations including $S_{variety}$
+\STATE Let $c_{e}$ be the count of combinations excluding $S_{variety}$
+\STATE $Table[cost][variety]=c_{i}+c_{e}$
+\ENDFOR
+\ENDFOR
+\STATE $Table[N][m]$ contains the total count of combinations possible when spending $N$ dollars on a selection of $m$ varieties
+\end{algorithmic}
+\end{algorithm}
+
+\noindent The for-loops take time $O(m) + O(N) \cdot O(m)$. Thus the time complexity of this dynamic programming algorithm has time complexity: $O(mN)$. \newline
+
+\noindent The $Table$ takes $O(N) \cdot O(m)$. Thus the time complexity of this dynamic programming algorithm has space complexity: $O(mN)$.
+
+\end{document}

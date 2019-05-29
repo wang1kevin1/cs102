@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,amsthm,amsfonts,amssymb,epsfig,amsmath,times,algorithm,algorithmic}
+\usepackage[table,xcdraw]{xcolor}
+
+\setlength{\parindent}{2.5em}
+
+\newtheoremstyle{indented-remark}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\bfseries}
+{:}
+{.5em}
+{}
+
+\newtheoremstyle{indented-proof}
+{}
+{}
+{\addtolength{\leftskip}{2.5em}}
+{}
+{\slshape}
+{.}
+{.5em}
+{}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}
+
+\theoremstyle{indented-remark}
+\newtheorem{case}{Case}
+
+\theoremstyle{indented-proof}
+\newtheorem*{proofofcase}{Proof of Case}
+
+\begin{document}
+
+\begin{center}
+{\bf\Large CMPS 102 --- Fall 2018 ---  Homework 4}
+\end{center}
+
+\begin{center}
+\textit{"I have read and agree to the collaboration policy." - \textbf{Kevin Wang}}
+\end{center}
+\begin{center}
+{\footnotesize \textbf{Collaborators:} \textit{None}} 
+\end{center}
+
+\section*{Solution to Problem 2: DNA}
+
+2 DNA sequences $S=\{ s_{1} , s_{2} , \cdots , s_{i} , \cdots , s_{m} \}$ and $T=\{ t_{1} , t_{2} , \cdots , t_{j} , \cdots , t_{n} \}$ have lengths $m$ and $n$ respectively. \\
+
+\noindent Let $LCS$ be the longest common sub-sequence. \\
+
+\noindent \textbf{LCS$\boldsymbol{[i,j]}$ is the length of the largest common sub-sequence, $\boldsymbol{LCS}$, shared by two sequences of sizes $\boldsymbol{i \text{ and } j}$.} \newline
+
+\indent \textbf{Base Case:} An empty sequence does not share a common sub-sequence.
+\begin{center}
+$LCS[i,0]=0$ and $LCS[0,j]=0$
+\end{center}
+
+\indent \textbf{Case 1:} $s_{i} = t_{j}$; the element is a part of the $LCS$.
+\begin{center}
+$LCS[i,j]=1+LCS[i-1,j-1]$
+\end{center}
+
+\indent \textbf{Case 2:} $s_{i} \neq t_{j}$; we ignore one of the elements.
+\begin{center}
+$LCS[i,j]=$ max( $LCS[i-1,j]$ , $LCS[i,j-1]$ )
+\end{center}
+
+
+\noindent Therefore, the $LCS$ of $S$ and $T$ has length $LCS[m][n]$. We can then walk back through the matrix to find an $LCS$.
+
+\vfill
+
+\begin{center}
+Continued...
+\end{center}
+
+\pagebreak
+
+\begin{algorithm}
+\caption{Finds the $LCS$ of of two sequences $S$ and $T$ with sizes $m$ and $n$, respectively}
+\begin{algorithmic} 
+\STATE \textbf{LCS} ($m,n$):
+\STATE Let $LCS[m][n]$ be the sub-sequence size matrix
+\FOR{$i=0$ to $m$}
+\FOR{$j=0$ to $n$}
+\IF{$i=0$ or $j=0$}
+\STATE $LCS[i][j]=0$
+\ELSIF{$s_{i} = t_{j}$}
+\STATE $LCS[i][j]=LCS[i-1][j-1]+1$
+\ELSE
+\STATE $LCS[i][j]=$ max( $LCS[i-1][j]$ , $LCS[i][j-1]$ )
+\ENDIF
+\ENDFOR
+\ENDFOR
+\STATE $LCS[m][n]$ is the length of the $LCS$
+\STATE
+\STATE Let $LCS$ be an empty sub-sequence 
+\STATE Let $i = m$ and $j = n$
+\WHILE{$i>0$ and $j>0$}
+\IF{$s_{i} = t_{j}$}
+\STATE $s_{i}$ :: $LCS$ 
+\STATE $i--$, $j--$
+\ELSIF{$LCS[i-1][j] \geq LCS[i][j-1]$}
+\STATE \textit{***Using $LCS[i-1][j]>LCS[i][j-1]$ can return another different $LCS$***}
+\STATE $i--$
+\ELSE 
+\STATE $j--$
+\ENDIF
+\ENDWHILE 
+\end{algorithmic}
+\end{algorithm}
+
+\noindent \textbf{Time Complexity: $O(mn)$} \\
+\noindent The 2 for-loops iterate $m$ and $n$ times, respectively, taking time $O(mn)$. Iterating back through the matrix to find the elements of the $LCS$ takes $O(m+n)$. Total time used is $O(mn + m + n)$.\\
+
+\noindent \textbf{Space Complexity: $O(mn)$} \\
+\noindent The $LCS$ matrix takes size $O(mn)$. The LCS sequence, takes (at most) $O($max($m,n$)). Total space used is $O(mn + \text{max($m,n$)})$.
+
+\end{document}
